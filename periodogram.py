@@ -337,6 +337,25 @@ def get_mag_dir(date="2022-07-02",lat=50,lon=15,alt=550):
     #pos=f'{lat}_{lon}'
     return dict([(dd.tag,float(dd.text)) for dd in table])
 
+
+def sun_vec_CHall(time):
+    from math import pi
+    import numpy as math #dirty :-)
+    year, month, day, hour, minute, s = time.year, time.month, time.day, time.hour, time.minute, time.second#map(int,"2021.12.02.12.30.0".split("."))
+    JD = 367 * year - 7 * (year + (month + 9)/12)/4 + 275 * month/9 + day + 1721029 + hour/24 + minute/1440 + s/86400
+
+    T_UT1 = (JD - 2451545.0)/36525
+    L_M_Sun = (280.4606184) + 36000.77005361*T_UT1
+    #L_M_Sun = (280.4606184)*pi/180 + 36000.77005361*T_UT1
+    M_Sun = (357.5277233) + 35999.05034*T_UT1
+    #M_Sun = (357.5277233)*pi/180 + 35999.05034*T_UT1
+    L_ecl = L_M_Sun + 1.914666471*math.sin(M_Sun*pi/180) + 0.918994643*math.sin(2*M_Sun*pi/180)
+    s_0 = 1.000140612 - 0.016708617*math.cos(M_Sun*pi/180) - 0.000139589*math.cos(2*M_Sun*pi/180)
+    epsilon = (23.439291) - 0.0130042*T_UT1
+    #epsilon = (23.439291)*pi/180 - 0.0130042*T_UT1
+    s_i = np.r_[math.cos(L_ecl*pi/180), math.cos(epsilon*pi/180)*math.sin(L_ecl*pi/180), math.sin(epsilon*pi/180)*math.sin(L_ecl*pi/180)]
+    return s_i
+
 ######################################################s
 # rotation framework revisited
 quatern=lambda mat:np.array([mat[1][2]-mat[2][1],mat[2][0]-mat[0][2],mat[0][1]-mat[1][0]])
