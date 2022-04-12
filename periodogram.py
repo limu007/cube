@@ -266,6 +266,7 @@ def make_curve(size=120,per=60,leng=200,ndeg=6,fac=3,noise=0.2):
 #---------------------------------------------------------------------
 
 def get_sat_pos(nw=None,tle=None,npt=200,delta=30,rep=0):
+    '''somewhere predict doesn't work in py3 - we use a parser of small py2 script'''
     import subprocess as sp
     from datetime import datetime,timedelta
     if nw==None: nw=datetime.now()
